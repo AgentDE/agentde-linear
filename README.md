@@ -12,7 +12,8 @@ An AgentDE extension for Linear.
 It's in AgentDE's default `extensions.json`, so building AgentDE clones it (and `agentde-widgets`) beside `agentde/`:
 
 ```json
-{ "package": "../agentde-linear", "product": "AgentDELinear", "create": "LinearExtension()" }
+{ "package": "../agentde-linear", "repo": "https://github.com/AgentDE/agentde-linear",
+  "product": "AgentDELinear", "create": "LinearExtension()" }
 ```
 
 ## Settings
