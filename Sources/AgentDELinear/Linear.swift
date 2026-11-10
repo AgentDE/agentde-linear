@@ -126,6 +126,8 @@ final class LinearFeed {
     private(set) var problem: LinearError?
     private(set) var viewer: String?
     @ObservationIgnored private var loadedAt: Date?
+    /// When the issues last loaded successfully (cached ones show it while Linear can't be reached).
+    private(set) var updatedAt: Date?
     @ObservationIgnored private var loading = false
 
     /// An API key or a sign-in.
@@ -146,6 +148,7 @@ final class LinearFeed {
                     let open = LinearMCP.issues(in: json).filter { !["completed", "canceled"].contains($0.stateType) }
                     self.issues = Self.sorted(open)
                     self.problem = nil
+                    self.updatedAt = Date()
                     if self.viewer == nil { self.lookUpViewer() }
                 case .failure(let error):
                     DebugLog.log("Linear list_issues: \(error.message)", "linear")
@@ -169,6 +172,7 @@ final class LinearFeed {
                 self.viewer = viewer?["name"] as? String
                 let nodes = (viewer?["assignedIssues"] as? [String: Any])?["nodes"] as? [[String: Any]] ?? []
                 self.issues = Self.sorted(nodes.compactMap(LinearAPI.issue(from:)))
+                self.updatedAt = Date()
                 self.problem = nil
             case .failure(let error):
                 self.problem = error

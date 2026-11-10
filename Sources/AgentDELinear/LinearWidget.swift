@@ -18,6 +18,12 @@ struct LinearWidget: View {
             } else if feed.issues.isEmpty {
                 WidgetMessage(text: "No open issues assigned to you.")
             } else {
+                // Cached issues while Linear can't be reached: say they may be out of date.
+                if feed.problem != nil, let updated = feed.updatedAt {
+                    Text("Offline · last updated \(updated.formatted(date: .omitted, time: .shortened))")
+                        .font(.system(size: 10.5)).foregroundStyle(.secondary)
+                        .padding(.horizontal, 10).padding(.top, 6)
+                }
                 ScrollView {
                     VStack(alignment: .leading, spacing: 1) {
                         ForEach(feed.issues) { issue in LinearIssueRow(issue: issue) }
